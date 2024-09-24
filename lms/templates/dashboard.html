@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    {% if user_profile.is_student %}
+        <!-- Section for Enrolled Courses (only for students) -->
+        <h2>Your Enrolled Courses</h2>
+        <div class="row">
+            {% for enrollment in enrolled_courses %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ enrollment.course.title }}</h5>
+                        <p class="card-text">{{ enrollment.course.description }}</p>
+                        <a href="{% url 'view_course' enrollment.course.id %}" class="btn btn-success">View Course</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>You have not enrolled in any courses yet.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Section for Available Courses -->
+        <h2>All Available Courses</h2>
+        <div class="row">
+            {% for course in available_courses %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.title }}</h5>
+                        <p class="card-text">{{ course.description }}</p>
+                        <a href="{% url 'enroll_course' course.id %}" class="btn btn-primary">Enroll</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>No available courses at the moment.</p>
+            {% endfor %}
+        </div>
+
+    {% elif user_profile.is_teacher %}
+        <!-- Section for Teacher's Courses -->
+        <h2>Your Courses</h2>
+        <div class="row">
+            {% for course in created_courses %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ course.title }}</h5>
+                        <p class="card-text">{{ course.description }}</p>
+                        <a href="{% url 'view_course' course.id %}" class="btn btn-success">View Course</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>You have not created any courses yet.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Button to Add New Course -->
+        <div class="mt-4">
+            <a href="{% url 'add_course' %}" class="btn btn-primary">Add New Course</a>
+        </div>
+    {% endif %}
+
+
+</div>
+{% endblock %}
